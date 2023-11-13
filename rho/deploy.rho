@@ -1,0 +1,50 @@
+// new message in {
+// 	contract @{"global_factory"}(getInfo, setInfo) = {
+// 		contract getInfo(ret) = {
+// 			for (msg <- message){
+// 				ret!(*msg)
+// 				|
+// 				message!(*msg)
+// 			}
+// 		}
+// 		|
+// 		contract setInfo(newMessage) = {
+// 			for (msg <- message) {
+// 				message!(*newMessage)
+// 			}
+// 		}
+// 	}
+// 	|
+// 	message!("Hello")
+// }
+
+new userinfo, print(`rho:io:stdout`), ret in {
+	contract @{"usr_factory"}(register, login) = {
+		userinfo!!({"04c2f4646a3f10e8e0fa748f10eec821aa217e727d0504286f76346ff8960aba14bea7f682a833e2edfa957f1a97448b1abda27f884a5a0949a96052cc640a5795":"usr_1",
+		})
+		|
+		contract register(publickey) = {
+			userinfo!!({"04c2f4646a3f10e8e0fa748f10eec821aa217e727d0504286f76346ff8960aba14bea7f682a833e2edfa957f1a97448b1abda27f884a5a0949a96052cc640a5795":"usr_1",
+			})
+			// |
+//			userinfo.union({*publickey, "testusrName"})
+		}
+		|
+		contract login(userPublicKey, ret) = {
+			for(@message <- userinfo){
+				print!(message)
+			}
+			|
+			for(@message <- userinfo){
+				if(message.contains(*userPublicKey)){
+					print!("Successful Login")
+					|
+					ret!(message.get(*userPublicKey))
+				}
+				else{
+					print!("Login Failure")
+				}
+			}
+		}
+	}
+}
